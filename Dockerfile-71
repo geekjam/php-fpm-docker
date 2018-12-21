@@ -3,7 +3,8 @@ FROM php:7.1-fpm-alpine
 MAINTAINER Jam <810441377@qq.com>
 
 RUN apk update \
-  && apk add --no-cache curl \
+  && apk add --no-cache \
+  tzdata curl \
   libmcrypt-dev \
   libmemcached-dev \
   postgresql-dev \
