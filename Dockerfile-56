@@ -27,9 +27,6 @@ RUN docker-php-ext-install bcmath pcntl mcrypt pdo_mysql pdo_pgsql mysqli \
   && apk add imagemagick-dev imagemagick \
   && pecl install imagick \
   && docker-php-ext-enable imagick \
-  # EXT Redis
-  && printf "\n" | pecl install -o -f redis \
-  && docker-php-ext-enable redis \
   # EXT Memcached
   && pecl install memcached \
   && docker-php-ext-enable memcached \
