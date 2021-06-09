@@ -1,0 +1,37 @@
+FROM php:7.4-fpm-alpine
+
+MAINTAINER Jam <810441377@qq.com>
+
+RUN apk update \
+  && apk add --no-cache \
+  tzdata curl \
+  libmemcached-dev \
+  postgresql-dev \
+  freetype-dev \
+  libjpeg-turbo-dev \
+  libpng-dev
+
+RUN docker-php-ext-install bcmath pcntl pdo_mysql pdo_pgsql mysqli opcache \
+  && docker-php-ext-configure gd \
+    --with-jpeg-dir=/usr/lib \
+    --with-freetype-dir=/usr/include/freetype2 \
+  && docker-php-ext-install gd \
+  && apk add --virtual .build-deps autoconf g++ make tar \
+  # EXT ZipArchive
+  && apk add --no-cache libzip-dev \
+  && docker-php-ext-configure zip --with-libzip \
+  && docker-php-ext-install zip \
+  # EXT ImageMagick
+  && apk add imagemagick-dev imagemagick \
+  && pecl install imagick \
+  && docker-php-ext-enable imagick \
+  # EXT Redis
+  && printf "\n" | pecl install -o -f redis \
+  && docker-php-ext-enable redis \
+  # EXT Memcached
+  && pecl install memcached \
+  && docker-php-ext-enable memcached \
+  # EXT END
+  && apk del .build-deps autoconf g++ make openssl-dev \
+  && rm -rf /tmp/pear \
+  && rm -rf /var/cache/apk/*
